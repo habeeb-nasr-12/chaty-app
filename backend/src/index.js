@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -25,10 +26,30 @@ app.use('/api/messages', messageRoutes);
 
 // Serve static files in production
 if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "..", "..", "frontend", "dist")));
-    app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname, "..", "..", "frontend", "dist", "index.html"));
-    });
+    const frontendDistPath = path.join(__dirname, "..", "dist");
+    
+    // Check if dist directory exists
+    try {
+        if (fs.existsSync(frontendDistPath)) {
+            app.use(express.static(frontendDistPath));
+            app.get("*", (req, res) => {
+                res.sendFile(path.join(frontendDistPath, "index.html"), (err) => {
+                    if (err) {
+                        console.error("Error serving index.html:", err);
+                        res.status(500).send("Internal Server Error");
+                    }
+                });
+            });
+            console.log("Serving static files from:", frontendDistPath);
+        } else {
+            console.warn("Frontend dist directory not found at:", frontendDistPath);
+            app.get("*", (req, res) => {
+                res.status(404).send("Frontend not built. Please run 'npm run build' first.");
+            });
+        }
+    } catch (error) {
+        console.error("Error setting up static file serving:", error);
+    }
 }
 
 server.listen(PORT, () => {
