@@ -15,15 +15,7 @@ A real-time chat application built with React, Node.js, Express, MongoDB, and So
 
 ### For Render.com:
 
-1. **Environment Variables** - Set these in your Render dashboard:
-   ```
-   NODE_ENV=production
-   MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
-   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-   CLOUDINARY_API_KEY=your_cloudinary_api_key
-   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-   ```
+
 
 2. **Build Command**: 
    ```
