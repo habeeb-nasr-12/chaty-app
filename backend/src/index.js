@@ -10,13 +10,13 @@ import messageRoutes from "./routes/message.route.js";
 import { connectDB } from "./lib/db.js";
 
 dotenv.config();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
 // Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 app.use(cors({
-    origin: "*",
+    origin:  process.env.NODE_ENV === "production" ? "*" : "http://localhost:5173",
     credentials: true
 }));
 

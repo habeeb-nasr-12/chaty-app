@@ -11,18 +11,24 @@ export const ChatContainer = () => {
     const { selectedUser, messages, isMessagesLoading, getMessages, subscribeToNewMessage, unsubscribeFromNewMessage } = useChatStore();
     const { authUser } = useAuthStore();
     const messageEndRef = useRef(null);
+    
     useEffect(() => {
-        getMessages(selectedUser._id);
-        subscribeToNewMessage();
+        if (selectedUser?._id) {
+            getMessages(selectedUser._id);
+            subscribeToNewMessage();
+        }
+        
         return () => {
             unsubscribeFromNewMessage();
         }
-    }, [selectedUser, getMessages, subscribeToNewMessage, unsubscribeFromNewMessage]);
+    }, [selectedUser?._id]); // Only depend on selectedUser._id to avoid re-subscriptions
+    
     useEffect(() => {
         if (messageEndRef.current && messages ) {
             messageEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages]); 
+    
     if (isMessagesLoading) return <div className="flex-1 flex flex-col overflow-auto ">
         <ChatHeader />
         <MessageSkeleton />

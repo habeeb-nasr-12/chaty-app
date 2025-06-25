@@ -104,7 +104,10 @@ const seedDatabase = async () => {
   try {
     await connectDB();
 
-    await User.insertMany(seedUsers);
+    await User.deleteMany({
+      email: { $in: seedUsers.map((user) => user.email) },
+    });
+ 
     console.log("Database seeded successfully");
   } catch (error) {
     console.error("Error seeding database:", error);
